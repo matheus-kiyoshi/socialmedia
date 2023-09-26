@@ -1,17 +1,16 @@
 import Link from 'next/link'
 import '../globals.css'
+import Icon from '../components/Icon'
 
 export default function MobileHeader() {
 	const isLogged = false
 
 	return (
-		<header className={`grid-area-header bg-white border-b w-full sticky top-0 ${isLogged ? 'h-16' : 'h-24'}`}>
+		<header className={`grid-area-header bg-white border-b w-full sticky top-0 z-10 ${isLogged ? 'h-16' : 'h-24'}`}>
           <div className="h-14 flex items-center justify-center">
             {isLogged && (
               <div className="absolute left-0 ml-4">
-                <figure className="w-12 h-12 rounded-full border border-black">
-                  <img src="favicon.ico" alt="Profile Picture" className="w-full h-full bg-cover"></img>
-                </figure>
+                <Icon icon="/favicon.ico" />
               </div>
             )}
             <h1>Incógnito</h1>
