@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Post } from './components/post'
 import './globals.css'
-import img from '@/../public/repository-open-graph-template.png'
+import defaultIcon from '@/../public/default-icon.jpg' 
 import axios from 'axios'
 
 type User = {
@@ -30,40 +30,64 @@ type Post = {
 }
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([])
-
-  useEffect(() => {
-    getPosts()
-  }, [])
-
-  async function getPosts() {
-    const BASEURL = 'https://incognitosocial.vercel.app/api'
-
-    const response = await axios.get(`${BASEURL}/posts`)
-    const posts = await getUsers(response.data)
-    setPosts(posts)
+ const [posts, setPosts] = useState<Post[]>([]);
+ const BASEURL = 'https://incognitosocial.vercel.app/api';
+ 
+ useEffect(() => {
+   getPosts();
+ }, []);
+ 
+  async function getPosts(skip?: number) {
+    skip = skip ? skip : 0
+    try {
+      const response = await axios.get(`${BASEURL}/posts?skip=${skip}`);
+      const postings = await getUsers(response.data);
+      const post = [...posts, ...postings];
+      setPosts(post);
+    } catch (error) {
+      console.error('Error retrieving posts:', error);
+    }
   }
 
   async function getUsers(posts: Post[]) {
-    const BASEURL = 'https://incognitosocial.vercel.app/api';
+    const storedUser = sessionStorage.getItem('user')
+    const verifiedUser = storedUser ? JSON.parse(storedUser) : []
 
-    let postPromises: Promise<Post>[] = posts.map(async (post: any) => {
-      let postAuthor = post;
-      const response = await axios.get(`${BASEURL}/users/${post.username}`);
-      postAuthor.author = response.data;
-      return postAuthor;
-    });
-    const resolvedPosts = await Promise.all(postPromises);
-    
-    return resolvedPosts
+    for (const post of posts) {
+      const existingUser = verifiedUser.find((user: User) => user.username === post.username)
+
+      if (existingUser) {
+        post.author = existingUser
+      } else {
+        try {
+          const response = await axios.get(`${BASEURL}/users/${post.username}`);
+          const user = response.data;
+
+          verifiedUser.push(user);
+
+          sessionStorage.setItem('user', JSON.stringify(verifiedUser));
+
+          post.author = user;
+        } catch (error) {
+          console.error(`Erro ao buscar usuário ${post.username}:`, error);
+        }
+      }
+    } 
+
+    return posts;
+  }
+
+  const handleClick = () => {
+    getPosts(posts.length)
   }
 
   return (
     <div className="h-[5000px] grid grid-layout-template">
     <main className="grid-area-main">
+      <button onClick={handleClick}>ATUALIZAR</button>
       {posts ? (
         posts.map((post: Post) => (
-          <Post.Root>
+          <Post.Root key={post._id}>
             <Post.Icon image={post.author?.icon} />
             <Post.ContentRoot>
               <Post.Information 
@@ -72,7 +96,8 @@ export default function Home() {
                 time={post.date}
               />
               <Post.Content text={post.content} />
-              <Post.Actions />
+              {post.media.length > 0 && <Post.Media data={post.media} />}
+              <Post.Actions comments={post.coments.length} likes={post.likes.length} reposts={post.reposts.length}/>
             </Post.ContentRoot>
           </Post.Root>
         ))
