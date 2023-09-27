@@ -49,7 +49,7 @@ export default function Home() {
 
     let postPromises: Promise<Post>[] = posts.map(async (post: any) => {
       let postAuthor = post;
-      const response = await axios.get(`${BASEURL}/users/${post.authorID}`);
+      const response = await axios.get(`${BASEURL}/users/${post.username}`);
       postAuthor.author = response.data;
       return postAuthor;
     });
@@ -68,7 +68,7 @@ export default function Home() {
             <Post.ContentRoot>
               <Post.Information 
                 nickname={post.author?.nickname}
-                username={post.author?.username}
+                username={post.username}
                 time={post.date}
               />
               <Post.Content text={post.content} />
