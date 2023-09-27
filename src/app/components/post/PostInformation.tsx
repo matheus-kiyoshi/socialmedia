@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 
@@ -36,8 +37,17 @@ export function PostInformation({nickname, username, time}: {nickname: string, u
 	return (
 		<div className='w-full flex items-center justify-between'>
 			<div className='flex justify-center items-center gap-2'>
-				<h2 className='font-bold'>{nickname}</h2>
-				<h3 className='font-light text-gray-600 text-sm'>@{username} • {date}</h3>
+				<h2 className='font-bold hover:underline underline-offset-1'>
+					<Link href={`/${username}`}>
+						{nickname}
+					</Link>
+				</h2>
+				<h3 className='font-light text-gray-600 text-sm'>
+					<Link href={`/${username}`}>
+						@{username}
+					</Link>
+					• {date}
+				</h3>
 			</div>
 			<button className='flex items-center justify-center mr-2'>
 				<FiMoreHorizontal className='h-4 w-4 cursor-pointer' />

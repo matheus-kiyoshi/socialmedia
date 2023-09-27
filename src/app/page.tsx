@@ -87,8 +87,8 @@ export default function Home() {
       <button onClick={handleClick}>ATUALIZAR</button>
       {posts ? (
         posts.map((post: Post) => (
-          <Post.Root key={post._id}>
-            <Post.Icon image={post.author?.icon} />
+          <Post.Root key={post._id} id={post._id}>
+            <Post.Icon username={post.username} image={post.author?.icon} />
             <Post.ContentRoot>
               <Post.Information 
                 nickname={post.author?.nickname}
@@ -97,7 +97,7 @@ export default function Home() {
               />
               <Post.Content text={post.content} />
               {post.media.length > 0 && <Post.Media data={post.media} />}
-              <Post.Actions comments={post.coments.length} likes={post.likes.length} reposts={post.reposts.length}/>
+              <Post.Actions comments={post.coments.length} likes={post.likes.length} reposts={post.reposts.length} id={post._id} />
             </Post.ContentRoot>
           </Post.Root>
         ))

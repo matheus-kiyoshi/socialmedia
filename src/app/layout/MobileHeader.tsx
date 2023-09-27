@@ -3,14 +3,14 @@ import '../globals.css'
 import Icon from '../components/Icon'
 
 export default function MobileHeader() {
-	const isLogged = false
+	const isLogged = true
 
 	return (
 		<header className={`grid-area-header bg-white border-b w-full sticky top-0 z-10 ${isLogged ? 'h-16' : 'h-24'}`}>
           <div className="h-14 flex items-center justify-center">
             {isLogged && (
               <div className="absolute left-0 ml-4">
-                <Icon icon="/favicon.ico" />
+                <Icon username='mtyxxx' icon="/favicon.ico" />
               </div>
             )}
             <h1>Incógnito</h1>

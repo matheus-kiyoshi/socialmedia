@@ -1,12 +1,62 @@
 'use client'
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineRetweet } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
-export function PostActions({comments, likes, reposts}: {comments: number, likes: number, reposts: number}) {
+export function PostActions({comments, likes, reposts, id}: {comments: number, likes: number, reposts: number, id: string}) {
 	const [liked, setLiked] = useState(false)
 	const [reposted, setReposted] = useState(false)
 	const [likedCount, setLikedCount] = useState(likes)
 	const [repostedCount, setRepostedCount] = useState(reposts)
+	const BASEURL = 'https://incognitosocial.vercel.app/api'
+
+	useEffect(() => {
+		const abortController = new AbortController()
+		const signal = abortController.signal
+
+		handleLike(id, signal)
+
+		return () => {
+			abortController.abort()
+		}
+	}, [liked])
+
+	useEffect(() => {
+		const abortController = new AbortController()
+		const signal = abortController.signal
+		
+		handleRepost(id, signal)
+
+		return () => {
+			abortController.abort()
+		}
+	}, [reposted])
+
+	const handleLike = async (id: string, signal: any) => {
+		const jwt = localStorage.getItem('jwt')
+		if (jwt) {
+			const response = await axios.post(`${BASEURL}/posts/${id}/like`, {
+				headers: {
+					Authorization: `Bearer ${jwt}`
+				}
+			}, { signal })
+			const liked = response.data
+			return liked
+		}
+	}
+
+	const handleRepost = async (id: string, signal: any) => {
+		const jwt = localStorage.getItem('jwt')
+		if (jwt) {
+			const response = await axios.post(`${BASEURL}/posts/${id}/repost`, {
+				headers: {
+					Authorization: `Bearer ${jwt}`
+				}
+			}, { signal })
+			const reposted = response.data
+			return reposted
+		}
+	}
 
 	const formatNumber = (number: number) => {
 		if (number >= 1000000) {
