@@ -7,7 +7,7 @@ export default function MobileNav() {
   let activePage = '/'
 
 	return (
-		<nav className="grid-area-footer w-full h-16 fixed bottom-0 bg-slate-200 flex justify-around items-center z-10">
+		<nav className="grid-area-footer w-full h-16 fixed bottom-0 bg-slate-200 flex justify-around items-center z-10 sm:hidden">
       <Link href='/' className={`h-full flex items-center rounded-t-sm ${activePage === '/' && 'border-t-4 border-blue-400'}`}>
         <AiFillHome className="h-8 w-8 cursor-pointer hover:opacity-80 transition-all duration-300" />
       </Link>

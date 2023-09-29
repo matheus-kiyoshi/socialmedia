@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import MobileHeader from './layout/MobileHeader'
 import MobileNav from './layout/MobileNav'
+import TabletNav from './layout/TabletNav'
 
 const roboto = Roboto(
   { 
@@ -23,10 +24,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={roboto.className}>
-        <MobileHeader />
+      <body className={`${roboto.className} grid grid-layout-mobile sm:flex justify-between md:w-[85vw] md:mx-auto`}>
+        <div>
+          <TabletNav />
+        </div>
+        <div className='md:border-r-2'>
+          <MobileHeader />
+          {children}
+        </div>
         <MobileNav />
-        {children}
       </body>
     </html>
   )

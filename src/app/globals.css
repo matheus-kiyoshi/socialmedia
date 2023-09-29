@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.grid-layout-template {
+.grid-layout-mobile {
   grid:
   "header" auto
   "main" 1fr
@@ -10,12 +10,28 @@
   / 1fr;
 }
 
+.grid-layout-tablet {
+  display: grid;
+  grid:
+    "sidebar headerT" auto
+    "sidebar mainT" 1fr
+    / auto 1fr;
+}
+
+.sidebar { grid-area: sidebarT; }
+.header { grid-area: headerT; }
+.main { grid-area: mainT; }
+
 .grid-area-header {
   grid-area: header;
 }
 
 .grid-area-main {
   grid-area: main;
+}
+
+.grid-area-left {
+  grid-area: sidebar;
 }
 
 .grid-area-footer {

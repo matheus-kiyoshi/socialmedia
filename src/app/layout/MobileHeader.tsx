@@ -9,11 +9,12 @@ export default function MobileHeader() {
 		<header className={`grid-area-header bg-white border-b w-full sticky top-0 z-10 ${isLogged ? 'h-16' : 'h-24'}`}>
           <div className="h-14 flex items-center justify-center">
             {isLogged && (
-              <div className="absolute left-0 ml-4">
+              <div className="absolute left-0 ml-4 sm:hidden">
                 <Icon username='mtyxxx' icon="/favicon.ico" />
               </div>
             )}
-            <h1>Incógnito</h1>
+            <h1 className="sm:hidden">Incógnito</h1>
+            <h1 className="hidden sm:block">Home</h1>
           </div>
         {!isLogged && (
           <div className="sticky w-full h-10 top-16 flex items-center justify-evenly border-t">

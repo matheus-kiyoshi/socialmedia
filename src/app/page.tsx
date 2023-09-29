@@ -82,8 +82,7 @@ export default function Home() {
   }
 
   return (
-    <div className="h-[5000px] grid grid-layout-template">
-    <main className="grid-area-main">
+    <main className="grid-area-main mb-16 sm:mb-0">
       <button onClick={handleClick}>ATUALIZAR</button>
       {posts ? (
         posts.map((post: Post) => (
@@ -105,6 +104,5 @@ export default function Home() {
         <p>SEM POSTS</p>
       )}
     </main>
-    </div>
   )
 }
