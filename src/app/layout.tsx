@@ -5,6 +5,7 @@ import MobileHeader from './layout/MobileHeader'
 import MobileNav from './layout/MobileNav'
 import TabletNav from './layout/TabletNav'
 import CreatePostButton from './components/CreatePostButton'
+import Modal from './components/modal/Modal'
 
 const roboto = Roboto(
   { 
@@ -36,6 +37,7 @@ export default function RootLayout({
         <div className='sm:hidden'>
           <CreatePostButton />
         </div>
+        <Modal type='create' />
         <MobileNav />
       </body>
     </html>
