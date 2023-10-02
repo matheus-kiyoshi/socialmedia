@@ -6,6 +6,7 @@ import MobileNav from './layout/MobileNav'
 import TabletNav from './layout/TabletNav'
 import CreatePostButton from './components/CreatePostButton'
 import Modal from './components/modal/Modal'
+import { SessionProvider } from 'next-auth/react'
 
 const roboto = Roboto(
   { 
@@ -27,18 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} grid grid-layout-mobile sm:flex justify-between md:justify-center`}>
-        <div>
-          <TabletNav />
-        </div>
-        <div className='md:border-r-2 md:w-[560px]'>
-          <MobileHeader />
-          {children}
-        </div>
-        <div className='sm:hidden'>
-          <CreatePostButton />
-        </div>
-        <Modal type='create' />
-        <MobileNav />
+        {children}
       </body>
     </html>
   )
