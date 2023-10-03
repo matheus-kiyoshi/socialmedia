@@ -4,7 +4,7 @@ import '../globals.css'
 import Icon from '../components/Icon'
 import { useSession } from 'next-auth/react'
 
-export default function MobileHeader() {
+export default function MobileHeader({handleClick}: any) {
 	const session = useSession()
 
 	return (

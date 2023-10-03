@@ -32,6 +32,7 @@ export const authOptions = {
         }
         if (res.ok && user) {
           const userData = await proxy(user.token)
+          userData.token = user.token
           return userData
         }
 

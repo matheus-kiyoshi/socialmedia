@@ -8,6 +8,7 @@ declare module "next-auth" {
 			nickname: string
 			icon: string
 			usersBlocked: string[]
+			accessToken: string
     }
   }
 }

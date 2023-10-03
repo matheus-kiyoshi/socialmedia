@@ -9,14 +9,14 @@ import { IoIosNotificationsOutline, IoIosNotifications } from 'react-icons/io'
 import { IoPersonOutline, IoPerson } from 'react-icons/io5'
 import { usePathname } from "next/navigation"
 import CreatePostButton from "../components/CreatePostButton"
-import { FiMoreHorizontal } from "react-icons/fi"
+import { useSession } from "next-auth/react"
 
 export default function TabletNav() {
 	const pathname = usePathname()
-	let logged = false
+	const session = useSession()
 
 	const PAGES = {
-		home: '/',
+		home: '/home',
 		explore: '/search',
 		notifications: '/profile',
 		profile: '/profile',
@@ -43,24 +43,24 @@ export default function TabletNav() {
 				</Link>
 				<CreatePostButton />
 			</div>
-			{logged && (	
+			{session.data && (	
 				<button className="py-2 pr-1 lg:px-4 rounded-3xl hover:bg-zinc-100 flex items-center justify-center gap-2">
-					<Icon username='mtyxxx' icon="/favicon.ico" />
+					<Icon username={session.data?.user?.username} icon={session.data?.user?.icon} />
 					<div className='hidden lg:flex flex-col justify-center items-center'>
 						<h2 className='font-bold hover:underline underline-offset-1'>
-							<Link href={`/username`}>
-								nickname
+							<Link href={`/${session.data?.user?.username}`}>
+								{session.data?.user?.nickname}
 							</Link>
 						</h2>
 						<h3 className='font-light text-gray-600 text-sm'>
-							<Link href={`/$username}`}>
-								@username
+							<Link href={`/${session.data?.user?.username}`}>
+								@{session.data?.user?.username}
 							</Link>
 						</h3>
 					</div>
 				</button>
 			)}
-			{!logged && (
+			{!session.data && (
 				<button className="py-2 pr-1 lg:px-4 rounded-3xl w-full bg-blue-400 flex items-center justify-center gap-2">
 					<p className="font-bold hover:underline underline-offset-1">Login</p>
 				</button>					

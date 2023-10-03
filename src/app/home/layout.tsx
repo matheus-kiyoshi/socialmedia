@@ -24,18 +24,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} grid grid-layout-mobile sm:flex justify-between md:justify-center`}>
-				<div>
-					<TabletNav />
+      <body className={`${roboto.className} grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center`}>
+				<div className='grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center'>
+					<div>
+						<TabletNav />
+					</div>
+					<div className='md:border-r-2 md:w-[560px]'>
+						<MobileHeader />
+						{children}
+					</div>
+					<div className='sm:hidden'>
+						<CreatePostButton />
+					</div>
+					<MobileNav />
 				</div>
-				<div className='md:border-r-2 md:w-[560px]'>
-					<MobileHeader />
-					{children}
-				</div>
-				<div className='sm:hidden'>
-					<CreatePostButton />
-				</div>
-				<MobileNav />
       </body>
     </html>
   )

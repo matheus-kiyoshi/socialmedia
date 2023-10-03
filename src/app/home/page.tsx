@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Post } from '../components/post'
 import '../globals.css'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 
 type User = {
   _id: string
@@ -30,6 +31,7 @@ type Post = {
 
 export default function Home() {
  const [posts, setPosts] = useState<Post[]>([]);
+ const session = useSession()
  const BASEURL = 'https://incognitosocial.vercel.app/api';
  
  useEffect(() => {
@@ -82,7 +84,7 @@ export default function Home() {
 
   return (
     <main className="grid-area-main mb-16 sm:mb-0">
-      <button onClick={handleClick}>ATUALIZAR</button>
+      <button onClick={handleClick} className={`w-full h-6 py-4 flex items-center justify-center border-b border-blue-400 cursor-pointer sticky ${session.data ? 'top-16' : 'top-24'} bg-white z-20`}>More Posts</button>
       {posts ? (
         posts.map((post: Post) => (
           <Post.Root key={post._id}>
