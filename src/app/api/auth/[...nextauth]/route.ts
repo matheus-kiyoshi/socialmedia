@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import proxy from "../../proxy";
 
 export const authOptions = {
 	providers: [
@@ -30,7 +31,8 @@ export const authOptions = {
           throw new Error(user.message);
         }
         if (res.ok && user) {
-          return user;
+          const userData = await proxy(user.token)
+          return userData
         }
 
         return null;
@@ -45,16 +47,20 @@ export const authOptions = {
           ...token,
           accessToken: user.token,
           refreshToken: user.refreshToken,
-        };
+          userData: user
+        }
       }
 
       return token;
     },
 
     async session({ session, token }: { session: any, token: any }) {
-      session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.accessTokenExpires = token.accessTokenExpires;
+      if (token.userData) {
+        session.user = token.userData;
+        session.user.accessToken = token.accessToken;
+        session.user.refreshToken = token.refreshToken;
+        session.user.accessTokenExpires = token.accessTokenExpires;
+      }
 
       return session;
     },
