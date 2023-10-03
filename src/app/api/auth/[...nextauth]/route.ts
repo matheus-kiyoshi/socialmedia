@@ -8,7 +8,7 @@ export const authOptions = {
 			name: 'Credentials',
 			credentials: {
 				username: { label: "Username", type: "text", placeholder: "username" },
-				password: { label: "Password", type: "password" }
+				password: { label: "Password", type: "password", placeholder: "password" }
 			},
 			async authorize(credentials) {
 				if (!credentials) {

@@ -5,8 +5,9 @@ import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import { useForm, Resolver } from 'react-hook-form'
-import useLogin from '../customHooks/useLogin'
-import useCreate from '../customHooks/useCreate'
+import useLogin from '../components/customHooks/useLogin'
+import useCreate from '../components/customHooks/useCreate'
+import { useRouter } from 'next/navigation'
 
 type FormValues = {
   username: string
@@ -47,30 +48,28 @@ const resolver: Resolver<FormValues> = async (values) => {
   }
 }
 
-export default function Modal({type}: {type: string}) {
+export default function Register() {
 	const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver })
+	const router = useRouter()
 
 	const onSubmit = async (data: FormValues) => {
 		const { username, password } = data
-		if (type === 'login') {
-			const response = await useLogin(username, password)
-			console.log(response)
-		} else if (type === 'create') {
-			const response = await useCreate(username, password)
-			if (response) {
-				type = 'login'
-			}
+		const response = await useCreate(username, password)
+		if (response) {
+			router.push('/api/auth/signin')
+		} else {
+			console.error(response)
 		}
 	}
 
 	return (
-		<div className="w-screen h-screen flex justify-center items-center z-10 fixed bg-black bg-opacity-50">
-			<article className="bg-white w-5/6 rounded-lg py-4 flex flex-col justify-center items-center">
-				<h1 className="text-2xl font-bold text-center mb-2">{type}</h1>
+		<div className="w-screen h-screen flex justify-center items-center z-50 fixed bg-white">
+			<article className="w-[400px] h-[500px] rounded-lg py-4 flex flex-col justify-center items-center">
+				<h1 className="text-2xl font-bold text-center mb-2">Create Account</h1>
 				<div className="flex w-5/6 flex-col justify-center items-center gap-6">
 					<Box
 						component="form"
@@ -109,19 +108,14 @@ export default function Modal({type}: {type: string}) {
 							</p>
 						)}{' '}
 						<Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-						className='bg-blue-500'
-          >
-            {type === 'login' ? 'Sign In' : 'Sign Up'}
-          </Button>
-						<Grid item>
-							<Link href="/sign-up" variant="body2">
-								{"Don't have an account? Sign Up"}
-							</Link>
-						</Grid>
+							type="submit"
+							fullWidth
+							variant="contained"
+							sx={{ mt: 3, mb: 2 }}
+							className='bg-blue-500'
+          	>
+            	Sign Up
+          	</Button>
 					</Box>
 				</div>
 			</article>

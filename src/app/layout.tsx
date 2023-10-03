@@ -1,11 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
-import MobileHeader from './layout/MobileHeader'
-import MobileNav from './layout/MobileNav'
-import TabletNav from './layout/TabletNav'
-import CreatePostButton from './components/CreatePostButton'
-import Modal from './components/modal/Modal'
 import { NextAuthProvider } from './providers'
 
 const roboto = Roboto(
@@ -27,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} grid grid-layout-mobile sm:flex justify-between md:justify-center`}>
+      <body className={`${roboto.className}`}>
         <NextAuthProvider>
           {children}
         </NextAuthProvider>
