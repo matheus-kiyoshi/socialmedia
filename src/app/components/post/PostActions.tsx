@@ -1,60 +1,34 @@
 'use client'
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineRetweet } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
-export function PostActions({comments, likes, reposts, id}: {comments: number, likes: number, reposts: number, id: string}) {
+import useLike from "../customHooks/useLike";
+export function PostActions({comments, likes, reposts, id}: {comments: number, likes: string[], reposts: number, id: string}) {
 	const [liked, setLiked] = useState(false)
 	const [reposted, setReposted] = useState(false)
-	const [likedCount, setLikedCount] = useState(likes)
+	const [likedCount, setLikedCount] = useState(likes.length)
 	const [repostedCount, setRepostedCount] = useState(reposts)
-	const BASEURL = 'https://incognitosocial.vercel.app/api'
+	const session = useSession()
 
 	useEffect(() => {
-		const abortController = new AbortController()
-		const signal = abortController.signal
+		verifyIfIsLiked()
+	}, [])
 
-		handleLike(id, signal)
-
-		return () => {
-			abortController.abort()
+	const handleLike = async () => {
+		setLiked(!liked)
+		setLikedCount(liked ? likedCount - 1 : likedCount + 1)
+		const jwt = session.data?.user.accessToken || ''
+		if (jwt === '') {
+			return
 		}
-	}, [liked])
-
-	useEffect(() => {
-		const abortController = new AbortController()
-		const signal = abortController.signal
-		
-		handleRepost(id, signal)
-
-		return () => {
-			abortController.abort()
+		if (!id) {
+			return
 		}
-	}, [reposted])
-
-	const handleLike = async (id: string, signal: any) => {
-		const jwt = localStorage.getItem('jwt')
-		if (jwt) {
-			const response = await axios.post(`${BASEURL}/posts/${id}/like`, {
-				headers: {
-					Authorization: `Bearer ${jwt}`
-				}
-			}, { signal })
-			const liked = response.data
-			return liked
-		}
-	}
-
-	const handleRepost = async (id: string, signal: any) => {
-		const jwt = localStorage.getItem('jwt')
-		if (jwt) {
-			const response = await axios.post(`${BASEURL}/posts/${id}/repost`, {
-				headers: {
-					Authorization: `Bearer ${jwt}`
-				}
-			}, { signal })
-			const reposted = response.data
-			return reposted
+		const response = await useLike(id, jwt)
+		if (response) {
+			console.log(response)
 		}
 	}
 
@@ -65,6 +39,16 @@ export function PostActions({comments, likes, reposts, id}: {comments: number, l
 			return (number / 1000).toFixed(1) + "k";
 		} else {
 			return number.toString();
+		}
+	}
+
+	const verifyIfIsLiked = () => {
+		if (likes.length > 0) {
+			if (session.data) {
+				if (likes.includes(session.data.user.id)) {
+					setLiked(true)
+				}
+			}
 		}
 	}
 	
@@ -85,10 +69,7 @@ export function PostActions({comments, likes, reposts, id}: {comments: number, l
 					{formatNumber(repostedCount)}
 				</p>
 			</button>
-			<button onClick={() => {
-				setLiked(!liked)
-				setLikedCount(liked ? likedCount - 1 : likedCount + 1)
-			}}>
+			<button onClick={handleLike}>
 				<p className={`flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-red-600 ${liked ? 'text-red-600' : 'text-gray-600'}`}>
 					<AiFillHeart className='h-5 w-5' />
 					{formatNumber(likedCount)}

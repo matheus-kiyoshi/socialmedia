@@ -18,7 +18,6 @@ async function handleFetch(content: string, media: File[], token: string) {
 }
 
 export default async function useCreatePost(content: string, media: File[], token: string) {
-	console.log(content, media, token)
 	try {
 		const response = await handleFetch(content, media, token)
 		if (response.status == 201) {

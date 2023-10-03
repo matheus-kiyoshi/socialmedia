@@ -97,7 +97,7 @@ export default function Home() {
               />
               <Post.Content id={post._id} text={post.content} />
               {post.media.length > 0 && <Post.Media data={post.media} />}
-              <Post.Actions comments={post.coments.length} likes={post.likes.length} reposts={post.reposts.length} id={post._id} />
+              <Post.Actions comments={post.coments.length} likes={post.likes} reposts={post.reposts.length} id={post._id} />
             </Post.ContentRoot>
           </Post.Root>
         ))
