@@ -43,7 +43,7 @@ export function PostInformation({nickname, username, time}: {nickname: string, u
 					</Link>
 				</h2>
 				<h3 className='font-light text-gray-600 text-sm'>
-					<Link href={`/${username}`}>
+					<Link href={`/${username}`} className='mr-1'>
 						@{username}
 					</Link>
 					• {date}

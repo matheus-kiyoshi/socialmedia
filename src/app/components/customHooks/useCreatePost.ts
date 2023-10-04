@@ -20,12 +20,11 @@ async function handleFetch(content: string, media: File[], token: string) {
 export default async function useCreatePost(content: string, media: File[], token: string) {
 	try {
 		const response = await handleFetch(content, media, token)
-		if (response.status == 201) {
+		if (response) {
 			return true
 		} else {
 			return false
 		}
-		
 	} catch (error) {
 		console.error('post error:', error);
 	}

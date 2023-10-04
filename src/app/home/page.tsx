@@ -4,6 +4,8 @@ import { Post } from '../components/post'
 import '../globals.css'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
+import PostComponent from '../components/post/PostComponent'
+import RepostComponent from '../components/repost/RepostComponent'
 
 type User = {
   _id: string
@@ -35,7 +37,7 @@ export default function Home() {
  const BASEURL = 'https://incognitosocial.vercel.app/api';
  
  useEffect(() => {
-   getPosts();
+   getPosts()
  }, []);
  
   async function getPosts(skip?: number) {
@@ -82,24 +84,22 @@ export default function Home() {
     getPosts(posts.length)
   }
 
+  const verifyPostType = (post: Post) => {
+    if (post.type === 'post') {
+      return <PostComponent key={post._id} post={post} />
+    } else if (post.type === 'repost') {
+      return <RepostComponent key={post._id} post={post} />
+    } else if (post.type === 'comment') {
+      return 'Comment'
+    }
+  }
+
   return (
     <main className="grid-area-main mb-16 sm:mb-0">
       <button onClick={handleClick} className={`w-full h-6 py-4 flex items-center justify-center border-b border-blue-400 cursor-pointer sticky ${session.data ? 'top-16' : 'top-24'} bg-white z-20`}>More Posts</button>
       {posts ? (
         posts.map((post: Post) => (
-          <Post.Root key={post._id}>
-            <Post.Icon username={post.username} image={post.author?.icon} />
-            <Post.ContentRoot>
-              <Post.Information 
-                nickname={post.author?.nickname}
-                username={post.username}
-                time={post.date}
-              />
-              <Post.Content id={post._id} text={post.content} />
-              {post.media.length > 0 && <Post.Media data={post.media} />}
-              <Post.Actions comments={post.coments.length} likes={post.likes} reposts={post.reposts.length} id={post._id} />
-            </Post.ContentRoot>
-          </Post.Root>
+          verifyPostType(post)
         ))
       ) : (
         <p>SEM POSTS</p>

@@ -3,8 +3,9 @@ import { PostMedias } from "@/app/components/compose/PostMedias";
 import useCreatePost from "@/app/components/customHooks/useCreatePost";
 import { Post } from "@/app/components/post";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { BsImage } from "react-icons/bs";
 
 export default function ComposePost() {
@@ -12,7 +13,8 @@ export default function ComposePost() {
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 	const session = useSession()
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const fileInputRef = useRef<HTMLInputElement>(null)
+	const router = useRouter()
 
 	const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value
@@ -62,12 +64,15 @@ export default function ComposePost() {
 		if (jwt === '') {
 			console.log('sem jwt')
 		}
-		if (!text && !selectedFiles) {
+		if (!text) {
 			return
+		}
+		if (!selectedFiles) {
+			setSelectedFiles([])
 		}
 		const response = await useCreatePost(text, selectedFiles, jwt)
 		if (response) {
-			console.log(response)
+			router.push('/home')
 		}
 	}
 	
@@ -75,7 +80,7 @@ export default function ComposePost() {
 		<main className="w-screen h-screen flex justify-center items-center">
 			<article className="rounded-lg border p-4 max-w-[440px]">
 				<h1 className="text-2xl font-bold ml-6 my-2">Compose Post</h1>
-				{session.data && (
+				{session.data ? (
 					<>
 						<Post.Root>
 							<Post.Icon username={session.data?.user?.username} image={session.data?.user?.icon} />
@@ -116,6 +121,12 @@ export default function ComposePost() {
 								<button className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed" disabled={text.length < 1 && selectedFiles.length === 0} onClick={handlePost}>Post</button>
 							</div>
 						</div>
+					</>
+				) : (
+					<>
+						<p>Log in to post</p>
+						<Link href="/api/auth/signin" className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed">Sign in</Link>
+						<p>Doesn't have an account? <Link href="/register" className="text-blue-400">Sign up</Link></p>
 					</>
 				)}
 			</article>
