@@ -96,7 +96,7 @@ export default function Home() {
 
   return (
     <main className="grid-area-main mb-16 sm:mb-0">
-      <button onClick={handleClick} className={`w-full h-6 py-4 flex items-center justify-center border-b border-blue-400 cursor-pointer sticky ${session.data ? 'top-16' : 'top-24'} bg-white z-20`}>More Posts</button>
+      <button onClick={handleClick} className={`w-full h-6 py-4 flex items-center justify-center border-b border-blue-400 cursor-pointer sticky ${session.data ? 'top-16' : 'top-24'} bg-white z-20`}>Recent Posts</button>
       {posts ? (
         posts.map((post: Post) => (
           verifyPostType(post)
@@ -104,6 +104,7 @@ export default function Home() {
       ) : (
         <p>SEM POSTS</p>
       )}
+      <button onClick={handleClick} className={`w-full h-6 py-8 flex items-center justify-center border-b text-blue-400 text-lg border-blue-400 cursor-pointer bg-white font-semibold`}>Load More Posts</button>
     </main>
   )
 }

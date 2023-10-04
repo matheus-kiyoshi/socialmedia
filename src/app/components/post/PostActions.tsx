@@ -9,18 +9,65 @@ import { useRouter } from "next/navigation";
 import { Popover, Typography } from "@mui/material";
 import Link from "next/link";
 import useRepost from "../customHooks/useRepost";
-export function PostActions({comments, likes, reposts, id}: {comments: number, likes: string[], reposts: string[], id: string}) {
+
+type User = {
+  _id: string
+  username: string
+  nickname: string
+  bio: string
+  icon: string
+}
+
+type Post = {
+  authorID: string
+  author: User
+  username: string
+  content: string
+  media: string[]
+  coments: string[]
+  likes: string[]
+  reposts: string[]
+  date: string
+  wasEdited: boolean
+  type: 'comment' | 'post' | 'repost'
+  originalPost: string | null
+  _id: string
+}
+
+export function PostActions({
+	comments, 
+	likes, 
+	reposts, 
+	id
+}: {
+	comments: number, 
+	likes: string[], 
+	reposts: string[], 
+	id: string
+}) {
 	const [liked, setLiked] = useState(false)
 	const [reposted, setReposted] = useState(false)
 	const [likedCount, setLikedCount] = useState(likes.length)
 	const [repostedCount, setRepostedCount] = useState(reposts.length)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [verifiedPosts, setVerifiedPosts] = useState<Post[]>([])
 	const session = useSession()
 	const router = useRouter()
 
 	useEffect(() => {
+		getReposts()
 		verifyIfIsLikedOrReposted()
 	}, [])
+
+	const getReposts = async () => {
+		const promises = reposts.map(async (id) => {
+			const response = await axios.get('https://incognitosocial.vercel.app/api/posts/' + id)
+			return response.data;
+		});
+	
+		const repostsData = await Promise.all(promises);
+		setVerifiedPosts(repostsData);
+	}
 
 	const handleLike = async () => {
 		setLiked(!liked)
@@ -69,7 +116,7 @@ export function PostActions({comments, likes, reposts, id}: {comments: number, l
 				}
 			}
 			if (reposts.length > 0) {
-				if (reposts.includes(session.data.user.id)) {
+				if (verifiedPosts.find((post) => post.authorID === session.data.user.id)) {
 					setReposted(true)
 				}
 			}

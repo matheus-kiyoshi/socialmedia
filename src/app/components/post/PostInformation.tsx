@@ -1,13 +1,26 @@
+import { Popover, Typography } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 
 export function PostInformation({nickname, username, time}: {nickname: string, username: string, time: string}) {
 	const [date, setDate] = useState('')
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 	useEffect(() => {
 		setDate(calculateElapsedTime(time))
 	}, []);
+
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const idButton = open ? 'simple-popover' : undefined;
 
 	function calculateElapsedTime(initialDate: string): string {
 		const actualDate = new Date();
@@ -49,9 +62,25 @@ export function PostInformation({nickname, username, time}: {nickname: string, u
 					• {date}
 				</h3>
 			</div>
-			<button className='flex items-center justify-center mr-2'>
+			<button aria-describedby={idButton} type='button' onClick={handleClick} className='flex items-center justify-center mr-2'>
 				<FiMoreHorizontal className='h-4 w-4 cursor-pointer' />
 			</button>
+			<Popover
+				id={idButton}
+				open={open}
+				anchorEl={anchorEl}
+				onClose={handleClose}
+				anchorOrigin={{
+					vertical: 'top',
+					horizontal: 'center',
+				}}
+			>
+				<Typography sx={{ p: 2 }}>
+					<Link href={`/report`}> 
+						<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Report Post</p>
+					</Link>
+				</Typography>
+			</Popover>
 		</div>
 	)
 }

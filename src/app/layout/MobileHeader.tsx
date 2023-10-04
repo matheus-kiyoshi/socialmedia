@@ -1,22 +1,57 @@
 'use client'
 import Link from 'next/link'
 import '../globals.css'
-import Icon from '../components/Icon'
 import { useSession } from 'next-auth/react'
+import { NoLinkIcon } from '../components/noLinkIcon'
+import { Popover, Typography } from "@mui/material"
+import { useState } from 'react'
 
-export default function MobileHeader({handleClick}: any) {
+export default function MobileHeader() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const session = useSession()
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const idButton = open ? 'simple-popover' : undefined;
 
 	return (
 		<header className={`grid-area-header bg-white border-b w-full sticky top-0 z-20 ${session.data ? 'h-16' : 'h-24'}`}>
           <div className="h-14 flex items-center justify-center">
             {session.data && (
-              <div className="absolute left-0 ml-4 sm:hidden">
-                <Icon username={session.data?.user?.username} icon={session.data?.user?.icon} />
-              </div>
+              <>
+                <button aria-describedby={idButton} type="button" onClick={handleClick} className="absolute left-0 ml-4 sm:hidden">
+                  <NoLinkIcon icon={session.data?.user?.icon} />
+                </button>
+                <Popover
+                  id={idButton}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <Typography sx={{ p: 2 }}>
+                    <Link href={'/api/auth/signout'}> 
+                      <p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Sign Out</p>
+                    </Link>
+                    <Link href={`/${session.data?.user?.username}`}> 
+                      <p className='mt-2 flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Profile</p>
+                    </Link>
+                  </Typography>
+                </Popover>
+              </>
             )}
             <h1 className="sm:hidden">Incógnito</h1>
-            <h1 className="hidden sm:block">Home</h1>
+            <h1 className="hidden sm:block font-semibold text-xl">Home</h1>
           </div>
         {!session.data && (
           <div className="sticky w-full h-10 top-16 flex items-center justify-evenly border-t">
