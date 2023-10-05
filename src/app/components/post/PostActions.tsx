@@ -27,6 +27,7 @@ type Post = {
   coments: string[]
   likes: string[]
   reposts: string[]
+	repostsAuthorId: string[]
   date: string
   wasEdited: boolean
   type: 'comment' | 'post' | 'repost'
@@ -38,11 +39,13 @@ export function PostActions({
 	comments, 
 	likes, 
 	reposts, 
+	repostsAuthorId,
 	id
 }: {
 	comments: number, 
 	likes: string[], 
-	reposts: string[], 
+	reposts: string[],
+	repostsAuthorId: string[],
 	id: string
 }) {
 	const [liked, setLiked] = useState(false)
@@ -50,24 +53,12 @@ export function PostActions({
 	const [likedCount, setLikedCount] = useState(likes.length)
 	const [repostedCount, setRepostedCount] = useState(reposts.length)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [verifiedPosts, setVerifiedPosts] = useState<Post[]>([])
 	const session = useSession()
 	const router = useRouter()
 
 	useEffect(() => {
-		getReposts()
 		verifyIfIsLikedOrReposted()
 	}, [])
-
-	const getReposts = async () => {
-		const promises = reposts.map(async (id) => {
-			const response = await axios.get('https://incognitosocial.vercel.app/api/posts/' + id)
-			return response.data;
-		});
-	
-		const repostsData = await Promise.all(promises);
-		setVerifiedPosts(repostsData);
-	}
 
 	const handleLike = async () => {
 		setLiked(!liked)
@@ -116,7 +107,7 @@ export function PostActions({
 				}
 			}
 			if (reposts.length > 0) {
-				if (verifiedPosts.find((post) => post.authorID === session.data.user.id)) {
+				if (repostsAuthorId.includes(session.data.user.id)) {
 					setReposted(true)
 				}
 			}
@@ -136,12 +127,12 @@ export function PostActions({
 	
 	return (
 		<div className='flex items-center mt-2 gap-6'>
-			<button>
+			<Link href={`/compose/${id}/comment`}>
 				<p className='flex justify-center items-center text-sm text-gray-600 cursor-pointer transition-all gap-1 hover:opacity-80'>
 					<FaRegComment className='h-5 w-5' />
 					{formatNumber(comments)}
 				</p>
-			</button>
+			</Link>
 			<button aria-describedby={idButton} type='button' onClick={handleClick}>
 				<p className={`flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-green-700 ${reposted ? 'text-green-700' : 'text-gray-600'}`}>
 					<AiOutlineRetweet className='h-5 w-5' />

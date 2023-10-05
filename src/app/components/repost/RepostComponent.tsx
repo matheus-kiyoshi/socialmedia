@@ -21,6 +21,7 @@ type Post = {
   coments: string[]
   likes: string[]
   reposts: string[]
+	repostsAuthorId: string[]
   date: string
   wasEdited: boolean
   type: 'comment' | 'post' | 'repost'
@@ -70,7 +71,7 @@ export default function RepostComponent({ post }: { post: Post }) {
 							</Post.ContentRoot>
 						</div>
 					)}
-					<Post.Actions comments={post.coments.length} likes={post.likes} reposts={post.reposts} id={post._id} />
+					<Post.Actions comments={post.coments.length} likes={post.likes} reposts={post.reposts} repostsAuthorId={post.repostsAuthorId} id={post._id} />
 				</Post.ContentRoot>
 			</Post.Root>
 		)

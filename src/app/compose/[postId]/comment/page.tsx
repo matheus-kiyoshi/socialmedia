@@ -1,6 +1,6 @@
 'use client'
 import { PostMedias } from "@/app/components/compose/PostMedias";
-import useRepost from "@/app/components/customHooks/useRepost";
+import useComment from "@/app/components/customHooks/useComment";
 import { Post } from "@/app/components/post";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -72,7 +72,7 @@ export default function ComposeRepost() {
 			setSelectedFiles([])
 		}
 		const id = pathname.split("/")[2]
-		const response = await useRepost(id, jwt, text, selectedFiles)
+		const response = await useComment(text, selectedFiles, id, jwt)
 		if (response) {
 			router.push('/home')
 		}
@@ -81,7 +81,7 @@ export default function ComposeRepost() {
 	return (
 		<main className="w-screen h-screen flex justify-center items-center">
 			<article className="rounded-lg border p-4 max-w-[440px]">
-				<h1 className="text-2xl font-bold ml-6 my-2">Compose Repost</h1>
+				<h1 className="text-2xl font-bold ml-6 my-2">Compose Comment</h1>
 				{session.data ? (
 					<>
 						<Post.Root>
@@ -120,14 +120,14 @@ export default function ComposeRepost() {
 							</div>
 							<div className="flex items-center justify-center gap-2">
 								<p className={`text-xs pr-2 border-r ${text.length == 256 && 'text-red-600'}`}>{text.length}/256</p>
-								<button className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed" disabled={text.length < 1 && selectedFiles.length === 0} onClick={handlePost}>Repost</button>
+								<button className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed" disabled={text.length < 1 && selectedFiles.length === 0} onClick={handlePost}>Comment</button>
 							</div>
 						</div>
 					</>
 				) : (
 					<>
 						<p>
-							Log in to repost
+							Log in to comment
 							<Link href="/api/auth/signin" className="bg-blue-400 text-white py-1 px-2.5 rounded-md ml-2 disabled:bg-blue-200 disabled:cursor-not-allowed">Sign in</Link>
 						</p>
 						<p>

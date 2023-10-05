@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import PostComponent from '../components/post/PostComponent'
 import RepostComponent from '../components/repost/RepostComponent'
+import Link from 'next/link'
 
 type User = {
   _id: string
@@ -24,6 +25,7 @@ type Post = {
   coments: string[]
   likes: string[]
   reposts: string[]
+  repostsAuthorId: string[]
   date: string
   wasEdited: boolean
   type: 'comment' | 'post' | 'repost'
@@ -90,7 +92,12 @@ export default function Home() {
     } else if (post.type === 'repost') {
       return <RepostComponent key={post._id} post={post} />
     } else if (post.type === 'comment') {
-      return 'Comment'
+      return (
+        <>
+          <Link href={`/post/${post.originalPost}`} className='text-blue-400 text-sm ml-4 mt-3 italic'>— Reply to {post.username}</Link>
+          <PostComponent key={post._id} post={post} />
+        </>
+      )
     }
   }
 
