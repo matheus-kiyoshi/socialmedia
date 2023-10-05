@@ -11,7 +11,7 @@ import CreatePostButton from "../components/CreatePostButton"
 import { useSession } from "next-auth/react"
 import { Popover, Typography } from "@mui/material"
 import { useState } from "react"
-import { NoLinkIcon } from "../components/noLinkIcon"
+import { NoLinkIcon } from "../components/NoLinkIcon"
 
 export default function TabletNav() {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

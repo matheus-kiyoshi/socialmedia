@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import '../globals.css'
 import { useSession } from 'next-auth/react'
-import { NoLinkIcon } from '../components/noLinkIcon'
+import { NoLinkIcon } from '../components/NoLinkIcon'
 import { Popover, Typography } from "@mui/material"
 import { useState } from 'react'
 
