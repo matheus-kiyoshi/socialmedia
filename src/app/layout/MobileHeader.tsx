@@ -50,8 +50,9 @@ export default function MobileHeader() {
                 </Popover>
               </>
             )}
-            <h1 className="sm:hidden">Incógnito</h1>
-            <h1 className="hidden sm:block font-semibold text-xl">Home</h1>
+            <h1 className="block font-semibold text-xl">
+              <Link href={'/home'}>Home</Link>
+            </h1>
           </div>
         {!session.data && (
           <div className="sticky w-full h-10 top-16 flex items-center justify-evenly border-t">
