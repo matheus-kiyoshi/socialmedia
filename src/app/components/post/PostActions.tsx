@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Popover, Typography } from "@mui/material";
 import Link from "next/link";
 import useRepost from "../customHooks/useRepost";
+import useDeleteRepost from "../customHooks/useDeleteRepost";
 
 type User = {
   _id: string
@@ -89,6 +90,25 @@ export function PostActions({
 		}
 	}
 
+	const handleDeleteRepost = async () => {
+		setReposted(false)
+		setRepostedCount(repostedCount - 1)
+		const jwt = session.data?.user.accessToken || ''
+		if (jwt === '') {
+			return
+		}
+		if (!id) {
+			return
+		}
+		if (!session.data) {
+			return
+		}
+		const response = await useDeleteRepost(id, session.data.user.id, jwt)
+		if (response) {
+			router.refresh()
+		}
+	}
+
 	const formatNumber = (number: number) => {
 		if (number >= 1000000) {
 			return (number / 1000000).toFixed(1) + "M";
@@ -150,12 +170,22 @@ export function PostActions({
         }}
       >
         <Typography sx={{ p: 2 }}>
-					<button onClick={handleRepost}> 
-						<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Repost</p>
-					</button>
-					<Link href={`/compose/${id}/repost`}> 
-						<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Repost with content</p>
-					</Link>
+					{reposted ? (
+						<>
+							<button onClick={handleDeleteRepost}> 
+								<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Delete Repost</p>
+							</button>
+						</>
+					) : (
+						<>
+							<button onClick={handleRepost}> 
+								<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Repost</p>
+							</button>
+							<Link href={`/compose/${id}/repost`}> 
+								<p className='flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600'>Repost with content</p>
+							</Link>
+						</>
+					)}
 				</Typography>
       </Popover>
 			<button onClick={handleLike}>
