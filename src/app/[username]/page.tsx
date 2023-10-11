@@ -4,6 +4,10 @@ import ProfileComponent from "../components/profile/ProfileComponent";
 import { useEffect, useState } from "react"
 import axios from "axios";
 import PostComponent from "../components/post/PostComponent";
+import ProfileNav from "../components/profile/ProfileNav";
+import RepostComponent from "../components/repost/RepostComponent";
+import Link from "next/link";
+import ProfileHeader from "../layout/ProfileHeader";
 
 type User = {
   _id: string
@@ -36,6 +40,7 @@ type Post = {
 export default function ProfilePage() {
 	const [user, setUser] = useState<User | undefined>()
 	const [posts, setPosts] = useState<Post[]>([])
+	const [section, setSection] = useState('post')
 	const pathname = usePathname()
 	
 	useEffect(() => {
@@ -43,44 +48,77 @@ export default function ProfilePage() {
 	}, [])
 
 	async function getUser() {
-		const profileStored = sessionStorage.getItem('profile')
-		if (profileStored) {
-			const storedUser = JSON.parse(profileStored)
-			if (storedUser?.username == pathname) {
-				setUser(storedUser)
-				return
-			}
-		}
 		const response = await axios.get(`https://incognitosocial.vercel.app/api/users${pathname}`)
 		setUser(response.data)
-		sessionStorage.setItem('profile', JSON.stringify(response.data))
-	
 		if (response.data.posts.length > 0) {
-			getPosts(response.data.posts)
+			getPosts(response.data.username, response.data, posts.length)
 		}
 	}
 
-	async function getPosts(postsID: string[]) {
-		postsID.map(async (postID) => {
-			const response = await axios.get(`https://incognitosocial.vercel.app/api/posts/${postID}`)
-			const post = response.data
-			post.author = user
-			setPosts(prevPosts => [...prevPosts, post])
+	async function getPosts(username: string, user: User, skip?: number) {
+		skip = skip ? skip : 0
+		const response = await axios.get(`https://incognitosocial.vercel.app/api/users/${username}/posts?skip=${skip}`)
+		const postsArray = response.data
+		postsArray.map((post: Post) => {
+			post.author = user 
 		})
+		const post = [...posts, ...postsArray]
+		setPosts(post)
+	}
+
+	const handlePostSection = () => {
+		setSection('post')
+	}
+
+	const handleRepostSection = () => {
+		setSection('repost')
+	}
+
+	const handleCommentSection = () => {
+		setSection('comment')
 	}
 
 	return (
-		<main>
-			{user && (			
-				<ProfileComponent user={user} />
-			)}
-			{posts ? (
-				posts.map((post) => (
-					<PostComponent key={post._id} post={post} />
-				))
-			) : (
-				<p>Sem Posts</p>
-			)}
-		</main>
+		<>
+			<ProfileHeader user={user} />
+			<main>
+				{user && (			
+					<ProfileComponent user={user} />
+				)}
+				<ProfileNav section={section} handlePostSection={handlePostSection} handleRepostSection={handleRepostSection} handleCommentSection={handleCommentSection} />
+				{section == 'post' && (
+					posts ? (
+						posts.map((post) => (
+							post.type == 'post' && <PostComponent key={post._id} post={post} />
+						))
+					) : (
+						<p>Sem Posts</p>
+					)
+				)}
+				{section == 'repost' && (
+					posts ? (
+						posts.map((post) => (
+							post.type == 'repost' && <RepostComponent key={post._id} post={post} />
+						))
+					) : (
+						<p>Sem Posts</p>
+					)
+				)}
+				{section == 'comment' && (
+					posts ? (
+						posts.map((post) => (
+							post.type == 'comment' && (
+								<>
+									<Link href={`/post/${post.originalPost}`} className='text-blue-400 text-sm ml-4 mt-3 italic'>— Reply to {post.username}</Link>
+									<PostComponent key={post._id} post={post} />
+								</>
+							)
+						))
+					) : (
+						<p>Sem Posts</p>
+					)
+				)}
+			</main>
+		</>
 	)
 }

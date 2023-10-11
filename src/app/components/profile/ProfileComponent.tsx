@@ -2,7 +2,6 @@ import ProfileBanner from "./ProfileBanner";
 import ProfileFollows from "./ProfileFollows";
 import { ProfileIcon } from "./ProfileIcon";
 import ProfileInformation from "./ProfileInformation";
-import ProfileNav from "./ProfileNav";
 
 type User = {
   _id: string
@@ -26,7 +25,6 @@ export default function ProfileComponent({user}: {user: User}) {
 			</div>
 			<ProfileInformation nickname={user.nickname} username={user.username} bio={user.bio} />
 			<ProfileFollows followers={user.followers.length} following={user.following.length} />
-			<ProfileNav />
 		</>
 	)
 }

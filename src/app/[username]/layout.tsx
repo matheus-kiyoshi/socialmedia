@@ -28,7 +28,6 @@ export default function RootLayout({
 						<TabletNav />
 					</div>
 					<div className='md:border-r-2 sm:w-[560px]'>
-						<ProfileHeader />
 						{children}
 					</div>
 				</div>
