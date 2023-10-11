@@ -1,4 +1,5 @@
 import ProfileBanner from "./ProfileBanner";
+import ProfileButton from "./ProfileButton";
 import ProfileFollows from "./ProfileFollows";
 import { ProfileIcon } from "./ProfileIcon";
 import ProfileInformation from "./ProfileInformation";
@@ -21,7 +22,7 @@ export default function ProfileComponent({user}: {user: User}) {
 			<ProfileBanner image={banner} />
 			<div className='flex items-center justify-between px-6 py-2'>
 				<ProfileIcon icon={user.icon} />
-				<button className='rounded-3xl py-2 px-6 bg-blue-400 text-white font-medium text-xl'>Follow</button>
+				<ProfileButton username={user.username} />
 			</div>
 			<ProfileInformation nickname={user.nickname} username={user.username} bio={user.bio} />
 			<ProfileFollows followers={user.followers.length} following={user.following.length} />

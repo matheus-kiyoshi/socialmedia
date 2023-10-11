@@ -14,7 +14,7 @@ type User = {
 	posts: string[]
 }
 
-export default function ProfileHeader({user}: {user: User}) {
+export default function ProfileHeader({user}: {user?: User}) {
 	const scrollYRef = useRef(0)
 	const [scrollY, setScrollY] = useState(0)
 	const router = useRouter()
@@ -40,8 +40,8 @@ export default function ProfileHeader({user}: {user: User}) {
 				</button>
 				{scrollY > 80 && (
 					<div>
-						<h1 className='font-semibold text-xl'>{user.username}</h1>
-						<h2>{user.posts.length} Posts</h2>
+						<h1 className='font-semibold text-xl'>{user?.username}</h1>
+						<h2>{user?.posts.length} Posts</h2>
 					</div>
 				)}
 			</div>
