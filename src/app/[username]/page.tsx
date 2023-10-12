@@ -15,6 +15,7 @@ type User = {
   nickname: string
   bio: string
   icon: string
+	banner: string
 	posts: string[]
 	followers: string[]
 	following: string[]

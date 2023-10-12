@@ -97,7 +97,7 @@ export default function TabletNav() {
 			)}
 			{!session.data && (
 				<button className="py-2 pr-1 lg:px-4 rounded-3xl w-full bg-blue-400 flex items-center justify-center gap-2">
-					<p className="font-bold hover:underline text-white underline-offset-1">Login</p>
+					<Link href={'/api/auth/signin'} className="font-bold hover:underline text-white underline-offset-1">Login</Link>
 				</button>					
 			)}
 		</nav>

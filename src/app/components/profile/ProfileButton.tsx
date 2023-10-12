@@ -5,10 +5,10 @@ import useFollow from "../customHooks/useFollow"
 import useUnfollow from "../customHooks/useUnfollow"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import ProfileEdit from "./ProfileEdit"
 
 export default function ProfileButton({ username }: { username: string }) {
 	const [following, setFollowing] = useState(false)
-	const router = useRouter()
 	const session = useSession()
 
 	useEffect(() => {
@@ -58,7 +58,7 @@ export default function ProfileButton({ username }: { username: string }) {
 	return (
 		<>
 			{session.data?.user.username == username ? (
-				<button className='rounded-2xl py-1.5 px-6 bg-blue-400 text-white font-medium'>Edit Profile</button>
+				<ProfileEdit />
 			) : (
 				<button onClick={handleFollow} className={`rounded-3xl py-2 px-6  font-medium text-xl ${following ? 'bg-white text-blue-400 border-2' : 'bg-blue-400 text-white'}`}>{following ? 'Unfollow' : 'Follow'}</button>
 			)}

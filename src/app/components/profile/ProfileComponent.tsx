@@ -9,17 +9,16 @@ type User = {
   username: string
   nickname: string
   bio: string
+	banner: string
   icon: string
 	followers: string[]
 	following: string[]
 }
 
 export default function ProfileComponent({user}: {user: User}) {
-	const banner = 'https://firebasestorage.googleapis.com/v0/b/incognitosocial-d1ef2.appspot.com/o/default-header.jpg?alt=media&token=325b21a8-6aff-4704-b0cb-4f7e99f0f023'
-
 	return (
 		<>
-			<ProfileBanner image={banner} />
+			<ProfileBanner image={user.banner} />
 			<div className='flex items-center justify-between px-6 py-2'>
 				<ProfileIcon icon={user.icon} />
 				<ProfileButton username={user.username} />

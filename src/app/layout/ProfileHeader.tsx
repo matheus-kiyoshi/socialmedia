@@ -51,9 +51,9 @@ export default function ProfileHeader({user}: {user?: User}) {
 				</button>
 			) : (
 				<>
-					<button className='rounded-2xl py-1.5 px-6 bg-blue-400 text-white font-medium'>Follow</button>
+					<button className='rounded-2xl py-1.5 px-6 bg-blue-400 text-white font-medium'>Report</button>
 				</>
 			)}
     </header>
 	)
-}
+}	

@@ -11,7 +11,6 @@ async function handleFetch(username: string, password: string) {
 }
 
 export default async function useCreate(username: string, password: string) {
-	console.log(username, password)
 	try {
 		const response = await handleFetch(username, password)
 		if (response.message == 'User created') {
