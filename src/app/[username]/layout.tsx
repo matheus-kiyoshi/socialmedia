@@ -21,17 +21,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${roboto.className} grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center`}>
-				<div className='grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center'>
-					<div>
-						<TabletNav />
-					</div>
-					<div className='md:border-r-2 sm:w-[560px]'>
-						{children}
-					</div>
-				</div>
-      </body>
-    </html>
+    <section className={`${roboto.className} grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center`}>
+      <div className='grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center'>
+        <div>
+          <TabletNav />
+        </div>
+        <div className='md:border-r-2 sm:w-[560px]'>
+          {children}
+        </div>
+      </div>
+    </section>
   )
 }
