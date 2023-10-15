@@ -1,33 +1,40 @@
-import CredentialsProvider from "next-auth/providers/credentials"
-import proxy from "./api/proxy"
+import CredentialsProvider from 'next-auth/providers/credentials'
+import proxy from './api/proxy'
 
 export const authOptions = {
-	providers: [
-		CredentialsProvider({
-			name: 'Credentials',
-			credentials: {
-				username: { label: "Username", type: "text", placeholder: "username" },
-				password: { label: "Password", type: "password", placeholder: "password" }
-			},
-			async authorize(credentials) {
-				if (!credentials) {
-					return null;
-				}
-				const payload = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text', placeholder: 'username' },
+        password: {
+          label: 'Password',
+          type: 'password',
+          placeholder: 'password',
+        },
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          return null
+        }
+        const payload = {
           username: credentials.username,
           password: credentials.password,
         }
 
-        const res = await fetch('https://incognitosocial.vercel.app/api/login', {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: {
-            'Content-Type': 'application/json',
+        const res = await fetch(
+          'https://incognitosocial.vercel.app/api/login',
+          {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
-        const user = await res.json();
+        )
+        const user = await res.json()
         if (!res.ok) {
-          throw new Error(user.message);
+          throw new Error(user.message)
         }
         if (res.ok && user) {
           const userData = await proxy(user.token)
@@ -35,34 +42,42 @@ export const authOptions = {
           return userData
         }
 
-        return null;
-			}
-		})
-	],
-	secret: process.env.NEXTAUTH_SECRET,
-	callbacks: {
-    async jwt({ token, user, account }: { token: any, user: any, account: any }) {
+        return null
+      },
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({
+      token,
+      user,
+      account,
+    }: {
+      token: any
+      user: any
+      account: any
+    }) {
       if (account && user) {
         return {
           ...token,
           accessToken: user.token,
           refreshToken: user.refreshToken,
-          userData: user
+          userData: user,
         }
       }
 
-      return token;
+      return token
     },
 
-    async session({ session, token }: { session: any, token: any }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (token.userData) {
-        session.user = token.userData;
-        session.user.accessToken = token.accessToken;
-        session.user.refreshToken = token.refreshToken;
-        session.user.accessTokenExpires = token.accessTokenExpires;
+        session.user = token.userData
+        session.user.accessToken = token.accessToken
+        session.user.refreshToken = token.refreshToken
+        session.user.accessTokenExpires = token.accessTokenExpires
       }
 
-      return session;
+      return session
     },
-  }
+  },
 }

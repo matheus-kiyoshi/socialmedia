@@ -5,9 +5,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <section className={`w-screen h-screen`}>
-      {children}
-    </section>
-  )
+  return <section className={`w-screen h-screen`}>{children}</section>
 }

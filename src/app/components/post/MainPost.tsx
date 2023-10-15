@@ -1,9 +1,9 @@
-import { Post } from ".";
-import { MainPostActions } from "./MainPostActions";
-import { MainPostContent } from "./MainPostContent";
-import MainRepost from "./MainRepost";
-import { PostInformationNoDate } from "./PostInformationNoDate";
-import { LiaLevelUpAltSolid } from 'react-icons/lia' 
+import { Post } from '.'
+import { MainPostActions } from './MainPostActions'
+import { MainPostContent } from './MainPostContent'
+import MainRepost from './MainRepost'
+import { PostInformationNoDate } from './PostInformationNoDate'
+import { LiaLevelUpAltSolid } from 'react-icons/lia'
 
 type User = {
   _id: string
@@ -31,50 +31,73 @@ type Post = {
 }
 
 export default function MainPost({ post }: { post: Post }) {
-	const postDate = new Date(post.date);
+  const postDate = new Date(post.date)
 
-  const hours = postDate.getHours();
-  const minutes = postDate.getMinutes();
+  const hours = postDate.getHours()
+  const minutes = postDate.getMinutes()
 
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
-  const month = months[postDate.getMonth()];
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const month = months[postDate.getMonth()]
 
-  const day = postDate.getDate();
+  const day = postDate.getDate()
 
-  const year = postDate.getFullYear();
+  const year = postDate.getFullYear()
 
-	const formattedTime = (time: number) => {
-		if (time < 10) {
-			return `0${time}`;
-		} else {
-			return `${time}`
-		}
-	}
+  const formattedTime = (time: number) => {
+    if (time < 10) {
+      return `0${time}`
+    } else {
+      return `${time}`
+    }
+  }
 
-	return (
-		<article key={post._id} className='w-full p-2 border-b flex flex-col gap-2'>
+  return (
+    <article key={post._id} className="w-full p-2 border-b flex flex-col gap-2">
       {post.type === 'comment' && (
-        <p className='text-blue-400 text-sm ml-4 italic flex gap-2'>Reply to <LiaLevelUpAltSolid /></p>
+        <p className="text-blue-400 text-sm ml-4 italic flex gap-2">
+          Reply to <LiaLevelUpAltSolid />
+        </p>
       )}
-			<div className='flex gap-2'>
-				<Post.Icon username={post.username} image={post.author?.icon} />
-				<PostInformationNoDate nickname={post.author.nickname} username={post.username} />
-			</div>
-			<Post.ContentRoot>
-				<MainPostContent id={post._id} text={post.content} />
-				{post.media.length > 0 && <Post.Media data={post.media} />}
-        {post.type === 'repost' && (
-          <MainRepost post={post} />
-        )}
-				<div className='flex justify-start items-center gap-3 font-light text-gray-600 my-3'>
-					<p>{formattedTime(hours)}:{formattedTime(minutes)}</p>
-					<p>{month} {day}, {year}</p>
-				</div>
-				<MainPostActions comments={post.coments.length} likes={post.likes} reposts={post.reposts} repostsAuthorId={post.repostsAuthorId} id={post._id} />
-			</Post.ContentRoot>
-		</article>
-	)
+      <div className="flex gap-2">
+        <Post.Icon username={post.username} image={post.author?.icon} />
+        <PostInformationNoDate
+          nickname={post.author.nickname}
+          username={post.username}
+        />
+      </div>
+      <Post.ContentRoot>
+        <MainPostContent id={post._id} text={post.content} />
+        {post.media.length > 0 && <Post.Media data={post.media} />}
+        {post.type === 'repost' && <MainRepost post={post} />}
+        <div className="flex justify-start items-center gap-3 font-light text-gray-600 my-3">
+          <p>
+            {formattedTime(hours)}:{formattedTime(minutes)}
+          </p>
+          <p>
+            {month} {day}, {year}
+          </p>
+        </div>
+        <MainPostActions
+          comments={post.coments.length}
+          likes={post.likes}
+          reposts={post.reposts}
+          repostsAuthorId={post.repostsAuthorId}
+          id={post._id}
+        />
+      </Post.ContentRoot>
+    </article>
+  )
 }

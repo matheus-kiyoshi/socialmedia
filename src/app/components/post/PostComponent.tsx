@@ -1,4 +1,4 @@
-import { Post } from ".";
+import { Post } from '.'
 
 type User = {
   _id: string
@@ -26,19 +26,25 @@ type Post = {
 }
 
 export default function PostComponent({ post }: { post: Post }) {
-	return (
-		<Post.Root key={post._id}>
-			<Post.Icon username={post.username} image={post.author?.icon} />
-			<Post.ContentRoot>
-				<Post.Information 
-					nickname={post.author?.nickname}
-					username={post.username}
-					time={post.date}
-				/>
-				<Post.Content id={post._id} text={post.content} />
-				{post.media.length > 0 && <Post.Media data={post.media} />}
-				<Post.Actions comments={post.coments.length} likes={post.likes} reposts={post.reposts} repostsAuthorId={post.repostsAuthorId} id={post._id} />
-			</Post.ContentRoot>
-		</Post.Root>
-	)
+  return (
+    <Post.Root key={post._id}>
+      <Post.Icon username={post.username} image={post.author?.icon} />
+      <Post.ContentRoot>
+        <Post.Information
+          nickname={post.author?.nickname}
+          username={post.username}
+          time={post.date}
+        />
+        <Post.Content id={post._id} text={post.content} />
+        {post.media.length > 0 && <Post.Media data={post.media} />}
+        <Post.Actions
+          comments={post.coments.length}
+          likes={post.likes}
+          reposts={post.reposts}
+          repostsAuthorId={post.repostsAuthorId}
+          id={post._id}
+        />
+      </Post.ContentRoot>
+    </Post.Root>
+  )
 }

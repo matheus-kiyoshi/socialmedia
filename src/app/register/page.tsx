@@ -30,7 +30,7 @@ const resolver: Resolver<FormValues> = async (values) => {
       type: 'required',
       message: 'Username is required.',
     }
-	}	
+  }
 
   if (!values.password) {
     errors.password = {
@@ -46,76 +46,76 @@ const resolver: Resolver<FormValues> = async (values) => {
 }
 
 export default function Register() {
-	const {
+  const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver })
-	const router = useRouter()
+  const router = useRouter()
 
-	const onSubmit = async (data: FormValues) => {
-		const { username, password } = data
-		const response = await useCreate(username, password)
-		if (response) {
-			router.push('/api/auth/signin')
-		} else {
-			console.error(response)
-		}
-	}
+  const OnSubmit = async (data: FormValues) => {
+    const { username, password } = data
+    const response = await useCreate(username, password)
+    if (response) {
+      router.push('/api/auth/signin')
+    } else {
+      console.error(response)
+    }
+  }
 
-	return (
-		<div className="w-screen h-screen flex justify-center items-center z-50 fixed bg-white">
-			<article className="w-[400px] h-[500px] rounded-lg py-4 flex flex-col justify-center items-center">
-				<h1 className="text-2xl font-bold text-center mb-2">Create Account</h1>
-				<div className="flex w-5/6 flex-col justify-center items-center gap-6">
-					<Box
-						component="form"
-						onSubmit={handleSubmit(onSubmit)}
-						noValidate
-						sx={{ mt: 1 }}
-					>
-						<TextField
-							margin="normal"
-							required
-							fullWidth
-							id="username"
-							label="Username"
-							autoComplete="username"
-							autoFocus
-							{...register('username')}
-						/>
-						{errors.username && (
-							<p style={{ color: 'red', fontSize: '13px', marginTop: '0' }}>
-								{errors?.username?.message}
-							</p>
-						)}{' '}
-						<TextField
-							margin="normal"
-							required
-							fullWidth
-							label="Password"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-							{...register('password')}
-						/>
-						{errors.password && (
-							<p style={{ color: 'red', fontSize: '13px', marginTop: '0' }}>
-								{errors.password.message}
-							</p>
-						)}{' '}
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							sx={{ mt: 3, mb: 2 }}
-							className='bg-blue-500'
-          	>
-            	Sign Up
-          	</Button>
-					</Box>
-				</div>
-			</article>
-		</div>
-	)
+  return (
+    <div className="w-screen h-screen flex justify-center items-center z-50 fixed bg-white">
+      <article className="w-[400px] h-[500px] rounded-lg py-4 flex flex-col justify-center items-center">
+        <h1 className="text-2xl font-bold text-center mb-2">Create Account</h1>
+        <div className="flex w-5/6 flex-col justify-center items-center gap-6">
+          <Box
+            component="form"
+            onSubmit={handleSubmit(OnSubmit)}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              autoComplete="username"
+              autoFocus
+              {...register('username')}
+            />
+            {errors.username && (
+              <p style={{ color: 'red', fontSize: '13px', marginTop: '0' }}>
+                {errors?.username?.message}
+              </p>
+            )}{' '}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p style={{ color: 'red', fontSize: '13px', marginTop: '0' }}>
+                {errors.password.message}
+              </p>
+            )}{' '}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              className="bg-blue-500"
+            >
+              Sign Up
+            </Button>
+          </Box>
+        </div>
+      </article>
+    </div>
+  )
 }

@@ -3,12 +3,10 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import { NextAuthProvider } from './providers'
 
-const roboto = Roboto(
-  { 
-    weight: ['400', '500', '700'],
-    subsets: ['latin'] 
-  }
-)
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: 'Incognito Social',
@@ -23,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className}`}>
-        <NextAuthProvider>
-          {children}
-        </NextAuthProvider>
+        <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
   )

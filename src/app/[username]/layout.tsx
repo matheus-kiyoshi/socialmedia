@@ -3,12 +3,10 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import TabletNav from '../layout/TabletNav'
 import ProfileHeader from '../layout/ProfileHeader'
-const roboto = Roboto(
-  { 
-    weight: ['400', '500', '700'],
-    subsets: ['latin'] 
-  }
-)
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: 'Incognito Social',
@@ -21,14 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <section className={`${roboto.className} grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center`}>
-      <div className='grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center'>
+    <section
+      className={`${roboto.className} grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center`}
+    >
+      <div className="grid grid-layout-mobile sm:flex flex-row justify-between md:justify-center">
         <div>
           <TabletNav />
         </div>
-        <div className='md:border-r-2 sm:w-[560px]'>
-          {children}
-        </div>
+        <div className="md:border-r-2 sm:w-[560px]">{children}</div>
       </div>
     </section>
   )
