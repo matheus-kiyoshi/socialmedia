@@ -2,13 +2,17 @@ import axios from "axios";
 
 const BASEURL = 'https://incognitosocial.vercel.app/api';
 
-async function handleFetch(nickname: string, bio: string, icon: File, banner: File, token: string) {
+async function handleFetch(nickname: string, bio: string, token: string, icon?: File, banner?: File) {
 	const formData = new FormData()
 	formData.append('nickname', nickname)
 	formData.append('bio', bio)
-	formData.append('icon', icon)
-	formData.append('banner', banner)
-
+	if (icon) {
+		formData.append('icon', icon)
+	}
+	if (banner) {
+		formData.append('banner', banner)
+	}
+	
 	const config = {
 		headers: {
 			'Authorization': `Bearer ${token}`
@@ -19,9 +23,9 @@ async function handleFetch(nickname: string, bio: string, icon: File, banner: Fi
 	return response.data
 }
 
-export default async function useEditProfile(nickname: string, bio: string, icon: File, banner: File, token: string) {
+export default async function useEditProfile(nickname: string, bio: string, token: string, icon?: File, banner?: File) {
 	try {
-		const response = await handleFetch(nickname, bio, icon, banner, token)
+		const response = await handleFetch(nickname, bio, token, icon, banner)
 		if (response) {
 			return true
 		} else {

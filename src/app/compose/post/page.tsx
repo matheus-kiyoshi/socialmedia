@@ -14,6 +14,7 @@ export default function ComposePost() {
 	const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 	const session = useSession()
 	const fileInputRef = useRef<HTMLInputElement>(null)
+	const buttonRef = useRef<HTMLButtonElement>(null)
 	const router = useRouter()
 
 	const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,6 +61,7 @@ export default function ComposePost() {
 	}
 
 	const handlePost = async () => {
+		buttonRef.current?.setAttribute('disabled', 'true')
 		const jwt = session.data?.user.accessToken || ''
 		if (jwt === '') {
 			console.log('sem jwt')
@@ -74,6 +76,7 @@ export default function ComposePost() {
 		if (response) {
 			router.push('/home')
 		}
+		buttonRef.current?.setAttribute('disabled', 'false')
 	}
 	
 	return (
@@ -118,7 +121,7 @@ export default function ComposePost() {
 							</div>
 							<div className="flex items-center justify-center gap-2">
 								<p className={`text-xs pr-2 border-r ${text.length == 256 && 'text-red-600'}`}>{text.length}/256</p>
-								<button className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed" disabled={text.length < 1 && selectedFiles.length === 0} onClick={handlePost}>Post</button>
+								<button className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed" disabled={text.length < 1 && selectedFiles.length === 0} onClick={handlePost} ref={buttonRef}>Post</button>
 							</div>
 						</div>
 					</>

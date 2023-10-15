@@ -1,4 +1,5 @@
 'use client'
+import useEditProfile from "@/app/components/customHooks/useEditProfile"
 import ProfileComponent from "@/app/components/profile/ProfileComponent"
 import axios from "axios"
 import { useSession } from "next-auth/react"
@@ -20,21 +21,28 @@ type User = {
 
 export default function EditProfile() {
 	const [user, setUser] = useState<User>()
-	const [nickname, setNickname] = useState('');
-  const [bio, setBio] = useState('');
+	const [userFields, setUserFields] = useState({
+		nickname: '',
+		bio: '',
+		bannerPreview: '',
+		iconPreview: '',
+	})
 	const [banner, setBanner] = useState<File>()
-	const [bannerPreview, setBannerPreview] = useState<string>()
 	const [icon, setIcon] = useState<File>()
-	const [iconPreview, setIconPreview] = useState<string>()
 	const session = useSession()
 	const iconInputRef = useRef<HTMLInputElement>(null)
 	const bannerInputRef = useRef<HTMLInputElement>(null)
+	const buttonRef = useRef<HTMLButtonElement>(null)
 	const router = useRouter()
 	const pathname = usePathname()
 
 	useEffect(() => {
 		getUser()
 	}, [])
+
+	useEffect(() => {
+		userUpdate()
+	}, [userFields])
 
 	async function getUser() {
 		const response = await axios.get(`https://incognitosocial.vercel.app/api/users/${pathname.split("/").pop()}`)
@@ -44,17 +52,20 @@ export default function EditProfile() {
 	async function userUpdate() {
 		let previewUser = user
 		if (previewUser) {
-			if (nickname) {
-				previewUser.nickname = nickname
+			if (userFields.nickname) {
+				previewUser = {...previewUser, nickname: userFields.nickname}
 			}
-			if (bio) {
-				previewUser.bio = bio
+
+			if (userFields.bio) {
+				previewUser = {...previewUser, bio: userFields.bio}
 			}
-			if (bannerPreview) {
-				previewUser.banner = bannerPreview
+
+			if (userFields.bannerPreview) {
+				previewUser = {...previewUser, banner: userFields.bannerPreview}
 			}
-			if (iconPreview) {
-				previewUser.icon = iconPreview
+
+			if (userFields.iconPreview) {
+				previewUser = {...previewUser, icon: userFields.iconPreview}
 			}
 		}
 
@@ -73,10 +84,9 @@ export default function EditProfile() {
 				setBanner(file);
 	
 				const preview = URL.createObjectURL(file);
-				setBannerPreview(preview);
+				setUserFields(prevState => ({...prevState, bannerPreview: preview}))
 			}
 		}
-		userUpdate()
   }
 
 	const handleIconChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,10 +101,9 @@ export default function EditProfile() {
 				setIcon(file);
 	
 				const preview = URL.createObjectURL(file);
-				setIconPreview(preview)
+				setUserFields(prevState => ({...prevState, iconPreview: preview}))
 			}
 		}
-		userUpdate()
   }
 
 	const handleBannerClick = () => {
@@ -109,20 +118,32 @@ export default function EditProfile() {
     }
   }
 
-	const handleBannerClose = () => {
-		setBanner(undefined);
-		setBannerPreview(undefined);
-	}
-	
-	const handleIconClose = () => {
-		setIcon(undefined);
-		setIconPreview(undefined);
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		setUserFields(prevState => ({...prevState, [e.target.name]: e.target.value}))
 	}
 
-	
+	const handleFetch = async () => {
+		buttonRef.current?.setAttribute('disabled', 'true')
+		const jwt = session.data?.user.accessToken || ''
+		if (jwt === '') {
+			console.log('sem jwt')
+		}
+		if (!userFields.nickname) {
+			return
+		}
+		if (!userFields.bio) {
+			setUserFields(prevState => ({...prevState, bio: ''}))
+		}
+
+		const response = await useEditProfile(userFields.nickname, userFields.bio, jwt, icon, banner)
+		if (response) {
+			router.push(`/${pathname.split("/").pop()}`)
+		}
+		buttonRef.current?.setAttribute('disabled', 'false')
+	}
 
 	return (
-		<main className="w-screen h-screen flex justify-center items-center gap-12">
+		<main className="w-screen h-screen flex justify-center items-center gap-6 flex-col sm:flex-row sm:gap-10">
 			<article className="rounded-lg border p-4 max-w-[440px]">
 				<h1 className="text-2xl font-bold ml-6 my-2">Edit Profile</h1>
 				{session.data ? (
@@ -169,12 +190,10 @@ export default function EditProfile() {
                 <input
                   type="text"
                   id="nickname"
-                  value={nickname}
+                  value={userFields.nickname}
+									name="nickname"
 									maxLength={30}
-                  onChange={(e) => {
-										setNickname(e.target.value)
-										userUpdate()
-									}}
+                  onChange={handleChange}
                   className="border p-2 w-full rounded-md"
                 />
               </div>
@@ -182,15 +201,15 @@ export default function EditProfile() {
                 <label htmlFor="bio" className="text-sm font-medium">Bio</label>
                 <textarea
                   id="bio"
-                  value={bio}
-                  onChange={(e) => {
-										setBio(e.target.value)
-										userUpdate()
-									}}
+                  value={userFields.bio}
+									name="bio"
+									maxLength={200}
+                  onChange={handleChange}
                   className="border p-2 w-full rounded-md"
                 />
               </div>
 						</div>
+						<button onClick={handleFetch} ref={buttonRef} disabled={userFields.nickname ? false : true} className="bg-blue-400 mt-2 mx-auto text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed">Save</button>
 					</>
 				) : (
 					<>

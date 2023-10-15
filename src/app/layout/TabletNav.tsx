@@ -22,7 +22,7 @@ export default function TabletNav() {
 		home: '/home',
 		explore: '/search',
 		notifications: '/profile',
-		profile: '/profile',
+		profile: `/${session.data?.user?.username}`,
 	}
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,7 +39,7 @@ export default function TabletNav() {
 	return (
 		<nav className="hidden z-20 top-0 bg-white border-r-2 sm:flex sm:sticky flex-col justify-between h-screen items-end py-6 px-4">
 			<div className="flex flex-col gap-6">
-				<Link href='/' className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
+				<Link href='/home' className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
 					{pathname === PAGES.home ? <RiHome7Fill className="h-10 w-10" /> : <BiHomeCircle className="h-10 w-10" />}
 					<p className={`hidden lg:block text-lg ${pathname === PAGES.home ? 'font-medium' : 'font-normal'} underline-offset-2`}>Home</p>
 				</Link>
@@ -47,11 +47,11 @@ export default function TabletNav() {
 					<AiOutlineSearch className="h-10 w-10" />
 					<p className={`hidden lg:block text-lg ${pathname === PAGES.explore ? 'font-medium' : 'font-normal'} underline-offset-2`}>Explore</p>
 				</Link>
-				<Link href='/profile' className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
+				<Link href='/notifications' className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
 					{pathname === PAGES.notifications ? <IoIosNotifications className="h-10 w-10" /> : <IoIosNotificationsOutline className="h-10 w-10" />}
 					<p className={`hidden lg:block text-lg ${pathname === PAGES.notifications ? 'font-medium' : 'font-normal'} underline-offset-2`}>Notifications</p>
 				</Link>
-				<Link href='/profile' className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
+				<Link href={session.data?.user.username ? `/${session.data?.user?.username}` : '/api/auth/signin'} className={`h-full flex gap-2 items-center rounded-r-sm hover:underline hover:opacity-75 cursor-pointer hover:bg-zinc-100 rounded-3xl py-2 pl-2`}>
 					{pathname === PAGES.profile ? <IoPerson className="h-10 w-10" /> : <IoPersonOutline className="h-10 w-10" />}
 					<p className={`hidden lg:block text-lg ${pathname === PAGES.profile ? 'font-medium' : 'font-normal'} underline-offset-2`}>Profile</p>
 				</Link>
