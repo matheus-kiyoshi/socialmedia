@@ -69,7 +69,10 @@ export default function ComposePost() {
     buttonRef.current?.setAttribute('disabled', 'true')
     const jwt = session.data?.user.accessToken || ''
     if (jwt === '') {
-      console.log('sem jwt')
+      setAlertText('You must be logged in (if you are logged in, please log out and log in and try again)')
+      setModal(true)
+      buttonRef.current?.removeAttribute('disabled')
+      return
     }
     if (!verifyStrings(text)) {
       setAlertText('Please write something')
@@ -156,13 +159,14 @@ export default function ComposePost() {
           </>
         ) : (
           <>
-            <p>Log in to post</p>
-            <Link
-              href="/api/auth/signin"
-              className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed"
-            >
-              Sign in
-            </Link>
+            <p>Log in to post
+              <Link
+                href="/api/auth/signin"
+                className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 ml-2 disabled:cursor-not-allowed"
+              >
+                Sign in
+              </Link>
+            </p>
             <p>
               Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-400">

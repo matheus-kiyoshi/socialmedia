@@ -1,6 +1,9 @@
 'use client'
+import { Alerts } from '@/app/components/alert/Alert'
 import useEditProfile from '@/app/components/customHooks/useEditProfile'
+import BasicModal from '@/app/components/modal/Modal'
 import ProfileComponent from '@/app/components/profile/ProfileComponent'
+import { verifyStrings } from '@/utils/verifyString'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -20,6 +23,8 @@ type User = {
 }
 
 export default function EditProfile() {
+  const [modal, setModal] = useState(false)
+  const [alertText, setAlertText] = useState('')
   const [user, setUser] = useState<User>()
   const [userFields, setUserFields] = useState({
     nickname: '',
@@ -135,9 +140,15 @@ export default function EditProfile() {
     buttonRef.current?.setAttribute('disabled', 'true')
     const jwt = session.data?.user.accessToken || ''
     if (jwt === '') {
-      console.log('sem jwt')
+      setAlertText('You must be logged in (if you are logged in, please log out and log in and try again)')
+      setModal(true)
+      buttonRef.current?.removeAttribute('disabled')
+      return
     }
-    if (!userFields.nickname) {
+    if (!verifyStrings(userFields.nickname)) {
+      setAlertText('Your nickname must not be empty')
+      setModal(true)
+      buttonRef.current?.removeAttribute('disabled')
       return
     }
     if (!userFields.bio) {
@@ -154,11 +165,16 @@ export default function EditProfile() {
     if (response) {
       router.push(`/${pathname.split('/').pop()}`)
     }
-    buttonRef.current?.setAttribute('disabled', 'false')
+    buttonRef.current?.removeAttribute('disabled')
   }
 
   return (
     <main className="w-screen h-screen flex justify-center items-center gap-6 flex-col sm:flex-row sm:gap-10">
+      {modal && (
+        <BasicModal open={modal} handleClick={() => setModal(false)}>
+          <Alerts.Error text={alertText} />
+        </BasicModal>
+      )}
       <article className="rounded-lg border p-4 max-w-[440px]">
         <h1 className="text-2xl font-bold ml-6 my-2">Edit Profile</h1>
         {session.data ? (
@@ -239,15 +255,16 @@ export default function EditProfile() {
           </>
         ) : (
           <>
-            <p>Log in to edit your profile</p>
-            <Link
-              href="/api/auth/signin"
-              className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 disabled:cursor-not-allowed"
-            >
-              Sign in
-            </Link>
+            <p>Log in to edit your profile
+              <Link
+                href="/api/auth/signin"
+                className="bg-blue-400 text-white py-1 px-2.5 rounded-md disabled:bg-blue-200 ml-2 disabled:cursor-not-allowed"
+                >
+                Sign in
+              </Link>
+            </p>
             <p>
-              Doesn&apos;t have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-400">
                 Sign up
               </Link>

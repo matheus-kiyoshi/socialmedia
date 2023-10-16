@@ -70,7 +70,10 @@ export default function ComposeRepost() {
     buttonRef.current?.setAttribute('disabled', 'true')
     const jwt = session.data?.user.accessToken || ''
     if (jwt === '') {
-      console.log('sem jwt')
+      setAlertText('You must be logged in (if you are logged in, please log out and log in and try again)')
+      setModal(true)
+      buttonRef.current?.removeAttribute('disabled')
+      return
     }
     if (!verifyStrings(text)) {
       setAlertText('Please write something')
