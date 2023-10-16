@@ -5,6 +5,9 @@ import Box from '@mui/material/Box'
 import { useForm, Resolver } from 'react-hook-form'
 import useCreate from '../components/customHooks/useCreate'
 import { useRouter } from 'next/navigation'
+import BasicModal from '../components/modal/Modal'
+import { Alerts } from '../components/alert/Alert'
+import { useState } from 'react'
 
 type FormValues = {
   username: string
@@ -26,17 +29,18 @@ const resolver: Resolver<FormValues> = async (values) => {
   const errors: Partial<Errors> = {}
 
   if (!values.username) {
-    errors.username = {
-      type: 'required',
-      message: 'Username is required.',
+    errors.username = { type: 'required', message: 'Username is required.' }
+  } else {
+    const usernameRegex = /^[a-z0-9]+$/
+    if (values.username.trim() !== values.username || !usernameRegex.test(values.username) || values.username.length < 1) {
+      errors.username = { type: 'invalid', message: 'Username is invalid. Must only contain lowercase letters and numbers, no spaces, no emojis/symbols/special characters.' }
     }
   }
 
   if (!values.password) {
-    errors.password = {
-      type: 'required',
-      message: 'Password is required.',
-    }
+    errors.password = { type: 'required', message: 'Password is required.' }
+  } else if (values.password.length <= 8) {
+    errors.password = { type: 'invalid', message: 'Password must be at least 8 characters long.' }
   }
 
   return {
@@ -46,6 +50,8 @@ const resolver: Resolver<FormValues> = async (values) => {
 }
 
 export default function Register() {
+  const [modal, setModal] = useState(false)
+  const [alertText, setAlertText] = useState('')
   const {
     register,
     handleSubmit,
@@ -59,12 +65,18 @@ export default function Register() {
     if (response) {
       router.push('/api/auth/signin')
     } else {
-      console.error(response)
+      setAlertText('Something went wrong, please try again.')
+      setModal(true)
     }
   }
 
   return (
     <div className="w-screen h-screen flex justify-center items-center z-50 fixed bg-white">
+      {modal && (
+        <BasicModal open={modal} handleClick={() => setModal(false)}>
+          <Alerts.Error text={alertText} />
+        </BasicModal>
+      )}
       <article className="w-[400px] h-[500px] rounded-lg py-4 flex flex-col justify-center items-center">
         <h1 className="text-2xl font-bold text-center mb-2">Create Account</h1>
         <div className="flex w-5/6 flex-col justify-center items-center gap-6">
