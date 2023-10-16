@@ -22,6 +22,9 @@ export default async function useCreatePost(
   media: File[],
   token: string,
 ) {
+  if (!content && !media) {
+    return false
+  }
   try {
     const response = await handleFetch(content, media, token)
     if (response) {

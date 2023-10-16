@@ -1,7 +1,10 @@
 'use client'
+import { Alerts } from '@/app/components/alert/Alert'
 import { PostMedias } from '@/app/components/compose/PostMedias'
 import useCreatePost from '@/app/components/customHooks/useCreatePost'
+import BasicModal from '@/app/components/modal/Modal'
 import { Post } from '@/app/components/post'
+import { verifyStrings } from '@/utils/verifyString'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -9,6 +12,8 @@ import { useRef, useState } from 'react'
 import { BsImage } from 'react-icons/bs'
 
 export default function ComposePost() {
+  const [modal, setModal] = useState(false)
+  const [alertText, setAlertText] = useState('')
   const [text, setText] = useState('')
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
@@ -66,7 +71,10 @@ export default function ComposePost() {
     if (jwt === '') {
       console.log('sem jwt')
     }
-    if (!text) {
+    if (!verifyStrings(text)) {
+      setAlertText('Please write something')
+      setModal(true)
+      buttonRef.current?.removeAttribute('disabled')
       return
     }
     if (!selectedFiles) {
@@ -81,6 +89,11 @@ export default function ComposePost() {
 
   return (
     <main className="w-screen h-screen flex justify-center items-center">
+      {modal && (
+        <BasicModal open={modal} handleClick={() => setModal(false)}>
+          <Alerts.Error text={alertText} />
+        </BasicModal>
+      )}
       <article className="rounded-lg border p-4 max-w-[440px]">
         <h1 className="text-2xl font-bold ml-6 my-2">Compose Post</h1>
         {session.data ? (
@@ -151,7 +164,7 @@ export default function ComposePost() {
               Sign in
             </Link>
             <p>
-              Doesn&apos;t have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-400">
                 Sign up
               </Link>
