@@ -34,10 +34,10 @@ export default function ProfileHeader({ user }: { user?: User }) {
 
   return (
     <header
-      className={`grid-area-header bg-white ${
+      className={`grid-area-header ${
         scrollY > 80
-          ? 'bg-opacity-80 border-b backdrop-blur-sm'
-          : 'bg-opacity-60'
+          ? 'bg-opacity-80 border-b bg-white backdrop-blur-sm'
+          : 'bg-transparent'
       } w-full sm:w-[558px] fixed top-0 z-20 h-16 flex items-center justify-between px-2`}
     >
       <div className="flex items-center gap-3">

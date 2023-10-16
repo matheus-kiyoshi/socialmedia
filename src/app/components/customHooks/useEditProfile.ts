@@ -8,21 +8,32 @@ async function handleFetch(
   token: string,
   icon?: File,
   banner?: File,
-) {
-  const formData = new FormData()
-  formData.append('nickname', nickname)
-  formData.append('bio', bio)
-  if (icon) {
-    formData.append('icon', icon)
-  }
-  if (banner) {
-    formData.append('banner', banner)
-  }
-
+  ) {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  }
+
+  const formData = new FormData()
+  
+  if (icon || banner) {
+    formData.append('nickname', nickname)
+    formData.append('bio', bio)
+    if (icon) {
+      formData.append('icon', icon)
+    }
+    if (banner) {
+      formData.append('banner', banner)
+    }
+  } else {
+    const payload = {
+      nickname,
+      bio
+    }
+
+    const response = await axios.patch(`${BASEURL}/profile`, payload, config)
+    return response.data
   }
 
   const response = await axios.patch(`${BASEURL}/profile`, formData, config)

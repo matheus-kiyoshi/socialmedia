@@ -154,7 +154,6 @@ export default function EditProfile() {
     if (!userFields.bio) {
       setUserFields((prevState) => ({ ...prevState, bio: '' }))
     }
-
     const response = await useEditProfile(
       userFields.nickname,
       userFields.bio,
