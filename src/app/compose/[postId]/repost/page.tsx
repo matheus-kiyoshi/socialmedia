@@ -1,4 +1,5 @@
 'use client'
+import ReturnButton from '@/app/components/ReturnButton'
 import { Alerts } from '@/app/components/alert/Alert'
 import { PostMedias } from '@/app/components/compose/PostMedias'
 import useRepost from '@/app/components/customHooks/useRepost'
@@ -99,6 +100,9 @@ export default function ComposeRepost() {
           <Alerts.Error text={alertText} />
         </BasicModal>
       )}
+      <div className="absolute top-4 left-4">
+        <ReturnButton />
+      </div>
       <article className="rounded-lg border p-4 max-w-[440px]">
         <h1 className="text-2xl font-bold ml-6 my-2">Compose Repost</h1>
         {session.data ? (
@@ -162,7 +166,7 @@ export default function ComposeRepost() {
         ) : (
           <>
             <p>
-              Log in to repost
+              Log in to repost{' '}
               <Link
                 href="/api/auth/signin"
                 className="bg-blue-400 text-white py-1 px-2.5 rounded-md ml-2 disabled:bg-blue-200 disabled:cursor-not-allowed"
@@ -171,7 +175,7 @@ export default function ComposeRepost() {
               </Link>
             </p>
             <p>
-              Don&apos;t have an account?
+              Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-400">
                 Sign up
               </Link>
