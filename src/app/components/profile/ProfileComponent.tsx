@@ -15,13 +15,13 @@ type User = {
   following: string[]
 }
 
-export default function ProfileComponent({ user }: { user: User }) {
+export default function ProfileComponent({ user, hasButton = true }: { user: User, hasButton?: boolean }) {
   return (
     <>
       <ProfileBanner image={user.banner} />
       <div className="flex items-center justify-between px-6 py-2">
         <ProfileIcon icon={user.icon} />
-        <ProfileButton username={user.username} />
+        {hasButton && <ProfileButton username={user.username} />}
       </div>
       <ProfileInformation
         nickname={user.nickname}

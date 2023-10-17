@@ -1,4 +1,5 @@
 'use client'
+import ReturnButton from '@/app/components/ReturnButton'
 import { Alerts } from '@/app/components/alert/Alert'
 import useEditProfile from '@/app/components/customHooks/useEditProfile'
 import BasicModal from '@/app/components/modal/Modal'
@@ -174,6 +175,9 @@ export default function EditProfile() {
           <Alerts.Error text={alertText} />
         </BasicModal>
       )}
+      <div className="absolute top-4 left-4">
+        <ReturnButton />
+      </div>
       <article className="rounded-lg border p-4 max-w-[440px]">
         <h1 className="text-2xl font-bold ml-6 my-2">Edit Profile</h1>
         {session.data ? (
@@ -276,7 +280,7 @@ export default function EditProfile() {
           <>
             <article className="rounded-lg border p-4 max-w-[440px]">
               <h1 className="text-2xl font-bold ml-6 my-2">Preview</h1>
-              {user && <ProfileComponent user={user} />}
+              {user && <ProfileComponent user={user} hasButton={false} />}
             </article>
           </>
         )}
