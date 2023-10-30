@@ -59,6 +59,7 @@ export default function RepostComponent({ post }: { post: Post }) {
             nickname={post.author?.nickname}
             username={post.username}
             time={post.date}
+            postID={post._id}
           />
           <Post.Content id={post._id} text={post.content} />
           {post.media.length > 0 && <Post.Media data={post.media} />}
@@ -73,6 +74,7 @@ export default function RepostComponent({ post }: { post: Post }) {
                   nickname={originalPost.username}
                   username={originalPost.username}
                   time={originalPost.date}
+                  postID={originalPost._id}
                 />
                 <Post.Content
                   id={originalPost._id}

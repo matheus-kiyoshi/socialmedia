@@ -3,6 +3,8 @@ import '@/app/globals.css'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import { useEffect, useRef, useState } from 'react'
 import ReturnButton from '../components/ReturnButton'
+import Link from 'next/link'
+import { Popover, Typography } from '@mui/material'
 
 type User = {
   _id: string
@@ -14,8 +16,9 @@ type User = {
 }
 
 export default function ProfileHeader({ user }: { user?: User }) {
-  const scrollYRef = useRef(0)
   const [scrollY, setScrollY] = useState(0)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const scrollYRef = useRef(0)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +32,17 @@ export default function ProfileHeader({ user }: { user?: User }) {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const idButton = open ? 'simple-popover' : undefined
 
   return (
     <header
@@ -48,14 +62,39 @@ export default function ProfileHeader({ user }: { user?: User }) {
         )}
       </div>
       {scrollY < 80 ? (
-        <button className="rounded-full p-1 bg-zinc-700">
-          <BiDotsVerticalRounded className="h-8 w-8 text-white" />
-        </button>
+        <>
+          <button 
+            aria-describedby={idButton}
+            type="button"
+            onClick={handleClick}
+            className="rounded-full p-1 bg-zinc-700"
+          >
+            <BiDotsVerticalRounded className="h-8 w-8 text-white" />
+          </button>
+          <Popover
+            id={idButton}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <Typography sx={{ p: 2 }}>
+              <Link href={`/compose/${user?.username}/reportuser`}>
+                <p className="flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600">
+                  Report User
+                </p>
+              </Link>
+            </Typography>
+          </Popover>
+        </>
       ) : (
         <>
-          <button className="rounded-2xl py-1.5 px-6 bg-blue-400 text-white font-medium">
+          <Link href={`/compose/${user?.username}/reportuser`} className="rounded-2xl py-1.5 px-6 bg-blue-400 text-white font-medium">
             Report
-          </button>
+          </Link>
         </>
       )}
     </header>

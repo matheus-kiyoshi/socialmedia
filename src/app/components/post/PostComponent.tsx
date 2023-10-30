@@ -34,6 +34,7 @@ export default function PostComponent({ post }: { post: Post }) {
           nickname={post.author?.nickname}
           username={post.username}
           time={post.date}
+          postID={post._id}
         />
         <Post.Content id={post._id} text={post.content} />
         {post.media.length > 0 && <Post.Media data={post.media} />}

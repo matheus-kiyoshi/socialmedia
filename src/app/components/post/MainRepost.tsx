@@ -60,6 +60,7 @@ export default function MainRepost({ post }: { post: Post }) {
             nickname={originalPost.username}
             username={originalPost.username}
             time={originalPost.date}
+            postID={originalPost._id}
           />
           <Post.Content id={originalPost._id} text={originalPost.content} />
           {originalPost.media.length > 0 && (

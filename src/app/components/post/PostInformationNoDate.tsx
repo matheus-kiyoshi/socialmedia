@@ -6,9 +6,11 @@ import { FiMoreHorizontal } from 'react-icons/fi'
 export function PostInformationNoDate({
   nickname,
   username,
+  postID,
 }: {
   nickname: string
   username: string
+  postID: string
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -54,7 +56,7 @@ export function PostInformationNoDate({
         }}
       >
         <Typography sx={{ p: 2 }}>
-          <Link href={`/report`}>
+          <Link href={`/compose/${postID}/report`}>
             <p className="flex justify-center items-center text-sm cursor-pointer transition-all gap-1 hover:text-blue-600">
               Report Post
             </p>

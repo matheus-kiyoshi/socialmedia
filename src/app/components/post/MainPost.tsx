@@ -76,6 +76,7 @@ export default function MainPost({ post }: { post: Post }) {
         <PostInformationNoDate
           nickname={post.author.nickname}
           username={post.username}
+          postID={post._id}
         />
       </div>
       <Post.ContentRoot>
