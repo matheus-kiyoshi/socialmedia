@@ -90,7 +90,7 @@ export default function ComposeRepost() {
     if (response) {
       router.push('/home')
     }
-    buttonRef.current?.setAttribute('disabled', 'false')
+    buttonRef.current?.removeAttribute('disabled')
   }
 
   return (
